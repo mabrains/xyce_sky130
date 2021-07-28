@@ -1,0 +1,8 @@
+--- sky130.lib.spice
++++ sky130.lib.spice
+@@ -366,4 +366,4 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/tt/rf.spice"
+-.endl lh
++.endl

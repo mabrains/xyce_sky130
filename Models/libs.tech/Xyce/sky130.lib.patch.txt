@@ -1,0 +1,82 @@
+diff --git a/models/sky130.lib.spice b/models/sky130.lib.spice
+index a8d3bf5..80303ab 100644
+--- a/models/sky130.lib.spice
++++ b/models/sky130.lib.spice
+@@ -51,7 +51,7 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/tt/rf.spice"
+-.endl
++.endl tt
+ 
+ * Slow-Fast corner (sf)
+ .lib sf
+@@ -90,7 +90,7 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/sf/rf.spice"
+-.endl
++.endl sf
+ 
+ * Fast-Fast corner (ff)
+ .lib ff
+@@ -129,7 +129,7 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/ff/rf.spice"
+-.endl
++.endl ff
+ 
+ * Slow-Slow corner (ss)
+ .lib ss
+@@ -168,7 +168,7 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/ss/rf.spice"
+-.endl
++.endl ss
+ 
+ * Fast-Slow corner (fs)
+ .lib fs
+@@ -207,7 +207,7 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/fs/rf.spice"
+-.endl
++.endl fs
+ 
+ * Low-Low corner (ll)
+ .lib ll
+@@ -246,7 +246,7 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/tt/rf.spice"
+-.endl
++.endl ll
+ 
+ 
+ * High-High corner (hh)
+@@ -286,7 +286,7 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/tt/rf.spice"
+-.endl
++.endl hh
+ 
+ 
+ * High-Low corner (hl)
+@@ -326,7 +326,7 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/tt/rf.spice"
+-.endl
++.endl hl
+ 
+ 
+ * Low-High corner (lh)
+@@ -366,4 +366,4 @@
+ .include "all.spice"
+ * Corner
+ .include "corners/tt/rf.spice"
+-.endl
++.endl lh

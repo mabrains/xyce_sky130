@@ -1,0 +1,15 @@
+*Inverter simulation with Xyce
+
+.lib "/home/eslam/mabrains/pdks/sky130A/libs.tech/ngspice/sky130.lib.spice" tt
+
+M1 out in vdd vdd sky130_fd_pr__pfet_g5v0d10v5 L=0.5 W=10 
+M2 out in vss vss sky130_fd_pr__nfet_g5v0d10v5 L=0.5 W=5
+
+Vsup vdd 0 1.8
+Vgnd vss 0 0
+Vin in 0 pulse (0 1.8 100p 50p 50p 200p 500p)
+
+.tran 3p 600p
+.print tran in out
+
+.end

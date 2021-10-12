@@ -2,7 +2,7 @@
 *.include /home/ali/skywater/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt.spice
 .lib "../../Models/libs.tech/ngspice/sky130.lib.spice" tt
 
-X1 d g 0 0 sky130_fd_pr__nfet_01v8 L=1 W=2
+X1 d g 0 0 sky130_fd_pr__nfet_01v8 L=.15 W=1.68
 R1 d vdd 1000
 
 V1 g 0 1
@@ -10,6 +10,6 @@ VDD vdd 0 1.8
 
 .control
 DC v1 0 1.8 0.1
-plot -I(vdd)
+print -I(vdd)
 .endc
 .end

@@ -1,0 +1,36 @@
+*Xyce Common Source Circuit
+.lib "../../Models/libs.tech/Xyce/sky130.lib.spice" tt
+
+***************
+** Parameters
+***************
+.param width=1.0
+.param length=1.0
+
+*****************
+** main netlist
+*****************
+X1 d g 0 0 sky130_fd_pr__nfet_01v8 W=width L=length
+R1 d vdd 1000
+
+V1 g 0 1
+VDD vdd 0 1.8
+
+********
+** data
+********
+.data device_data
++ width length
++ 1.26 0.15
++ 1.68 0.15
++ 1.0 1.0
+.enddata
+
+*****************
+** Analysic
+*****************
+.DC v1 0 1.8 0.1
+.STEP DATA=device_data
+.print DC FORMAT=CSV {-i(vdd)}
+
+.end

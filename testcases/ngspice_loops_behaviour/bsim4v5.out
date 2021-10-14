@@ -1,0 +1,8 @@
+
+Checking parameters for BSIM 4.5 model x1:sky130_fd_pr__nfet_01v8__model.58
+Fatal: Dsub = -3.73501 is negative.
+Fatal: u0 at current temperature = -0.00337929 is not positive.
+Fatal: Drout = -1.76933 is negative.
+Warning: Nfactor = -3.83971 is negative.
+Warning: Eta0 = -1.0291 is negative.
+Warning: Pdibl1 = -0.344381 is negative.

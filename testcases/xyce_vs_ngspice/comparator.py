@@ -173,8 +173,6 @@ def compare(devices_dic, corners, analysis):
                     (xyce_result-ngspice_result)/xyce_result)*100
                 comparison_table += f"{device},{width},{length},{corner},{np.max(error_percentage):.3f}%\n"
 
-            break
-        break
     with open(f"comparison_result_{analysis}.csv", "w")as f:
         f.write(comparison_table)
 
@@ -223,9 +221,6 @@ def simulate(devices_dic, corners, num_cores, analysis):
                                              supply=devices_dic[device]["supply"], file_name=file_name, analysis=analysis)
 
                     executor.submit(call_simulator, file_name)
-
-                break
-            break
 
 
 def main():

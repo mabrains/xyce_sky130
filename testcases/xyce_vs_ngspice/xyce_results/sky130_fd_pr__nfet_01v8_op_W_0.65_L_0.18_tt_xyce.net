@@ -1,0 +1,21 @@
+* Xyce Common Source Circuit
+
+.lib "../../Models/libs.tech/Xyce/sky130.lib.spice" tt
+
+*****************
+** main netlist
+*****************
+X1 d g 0 0 sky130_fd_pr__nfet_01v8 W = 0.65 L = 0.18
+R1 d vdd 1000
+
+V1 g 0 DC 1 AC 1 SIN(0 1 1k)
+VDD vdd 0 1.8
+
+
+*****************
+** Analysic
+*****************
+.op
+.print DC FILE=./xyce_results/sky130_fd_pr__nfet_01v8_op_W_0.65_L_0.18_tt_xyce.csv FORMAT=CSV {v(d)}
+
+.end

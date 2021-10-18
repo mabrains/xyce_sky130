@@ -6,7 +6,7 @@ Options:
   -h, --help             Show help text.
   -v, --version          Show version.
   --num_cores=<num>      Number of cores to be used by simulator
-  --analysis=<analysis>  Required analysis to run valid options are {DC,AC,Transient}
+  --analysis=<analysis>  Required analysis to run valid options are {DC,AC,Transient, OP}
 """
 
 import re
@@ -57,6 +57,9 @@ def generate_xyce_netlist(device_name: str, corner: str, width: str, length: str
         print_line = f".print AC FILE=./xyce_results/{file_name}.csv FORMAT=CSV {{vdb(d)}}"
     elif analysis.lower() == "transient":
         pass
+    elif analysis.lower() == "op":
+        analysis_line = f".op"
+        print_line = f".print DC FILE=./xyce_results/{file_name}.csv FORMAT=CSV {{v(d)}}"
 
     netlist = f"""* Xyce Common Source Circuit
 
@@ -107,6 +110,10 @@ def generate_ngspice_netlist(device_name: str, corner: str, width: str, length: 
         print_line = f"wrdata ./ngspice_results/{file_name}.csv  vdb(d)"
     elif analysis.lower() == "transient":
         pass
+    elif analysis.lower() == "op":
+        analysis_line = f"OP"
+        print_line = f"wrdata ./ngspice_results/{file_name}.csv  {{v(d)}}"
+
     netlist = f"""*Ngspice Common Source Circuit
 .lib "../../Models/libs.tech/ngspice/sky130.lib.spice" {corner}
 
@@ -153,7 +160,7 @@ def compare(devices_dic, corners, analysis):
             for dimension in dimensions:
                 width = dimension.split()[2]
                 length = dimension.split()[-1]
-                base_name = f"{device}_W_{width}_L_{length}_{corner}_{analysis}"
+                base_name = f"{device}_{analysis}_W_{width}_L_{length}_{corner}"
 
                 xyce_file_name = f"./xyce_results/{base_name}_xyce.csv"
                 ngspice_file_name = f"./ngspice_results/{base_name}_ngspice.csv"
@@ -161,11 +168,15 @@ def compare(devices_dic, corners, analysis):
                 xyce_df = pd.read_csv(xyce_file_name)
                 ngspice_df = pd.read_csv(ngspice_file_name, header=None)
 
-                xyce_result = np.array(list(xyce_df.iloc[:, 0]))
+                if analysis.lower() == "ac":
+                    xyce_result = np.array(list(xyce_df.iloc[:, 1]))
+                else:
+                    xyce_result = np.array(list(xyce_df.iloc[:, 0]))
+
                 ngspice_result = np.array(list(ngspice_df.iloc[:, 1]))
 
-                filter_xyce = xyce_result > 1e-9
-                filter_ngspice = ngspice_result > 1e-9
+                filter_xyce = np.abs(xyce_result) > 1e-9
+                filter_ngspice = np.abs(ngspice_result) > 1e-9
                 xyce_result = xyce_result[filter_xyce]
                 ngspice_result = ngspice_result[filter_ngspice]
 
@@ -173,6 +184,8 @@ def compare(devices_dic, corners, analysis):
                     (xyce_result-ngspice_result)/xyce_result)*100
                 comparison_table += f"{device},{width},{length},{corner},{np.max(error_percentage):.3f}%\n"
 
+            break
+        break
     with open(f"comparison_result_{analysis}.csv", "w")as f:
         f.write(comparison_table)
 
@@ -209,7 +222,7 @@ def simulate(devices_dic, corners, num_cores, analysis):
                 for dimension in dimensions:
                     width = dimension.split()[2]
                     length = dimension.split()[-1]
-                    file_name = f"{device}_W_{width}_L_{length}_{corner}_{analysis}"
+                    file_name = f"{device}_{analysis}_W_{width}_L_{length}_{corner}"
 
                     Path("./xyce_results").mkdir(parents=True, exist_ok=True)
                     Path("./ngspice_results").mkdir(parents=True, exist_ok=True)
@@ -221,6 +234,9 @@ def simulate(devices_dic, corners, num_cores, analysis):
                                              supply=devices_dic[device]["supply"], file_name=file_name, analysis=analysis)
 
                     executor.submit(call_simulator, file_name)
+
+                break
+            break
 
 
 def main():
@@ -238,8 +254,9 @@ def main():
 
     arguments = docopt(__doc__, version='comparator: 0.1')
 
-    if arguments["--analysis"].lower() not in ["dc", "ac", "transient"]:
-        print("ERROR: --analysis should be one of {'DC', 'AC', 'Transient'}")
+    if arguments["--analysis"].lower() not in ["dc", "ac", "transient", "op"]:
+        print(
+            "ERROR: --analysis should be one of {'DC', 'AC', 'Transient, 'OP'}")
         exit()
 
     if arguments["--analysis"].lower() == "transient":

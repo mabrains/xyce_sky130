@@ -14,7 +14,7 @@
 
 * SKY130 Spice File.
 * Number of bins: 05
-.param
+*.param
 .param
 + sky130_fd_pr__nfet_g5v0d16v0__toxe_mult = 1.042
 + sky130_fd_pr__nfet_g5v0d16v0__overlap_mult = 1.9012

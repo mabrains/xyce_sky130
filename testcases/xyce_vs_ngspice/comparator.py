@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 import concurrent.futures
 from docopt import docopt
+import os.path
 
 
 def extract_device_dimensions(device_path):
@@ -165,6 +166,14 @@ def compare(devices_dic, corners, analysis):
                 xyce_file_name = f"./xyce_results/{base_name}_xyce.csv"
                 ngspice_file_name = f"./ngspice_results/{base_name}_ngspice.csv"
 
+                if not os.path.isfile(xyce_file_name):
+                    print(f"ERROR: File {xyce_file_name} doesn't exist")
+                    continue
+
+                if not os.path.isfile(ngspice_file_name):
+                    print(f"ERROR: File {ngspice_file_name} doesn't exist")
+                    continue
+
                 xyce_df = pd.read_csv(xyce_file_name)
                 ngspice_df = pd.read_csv(ngspice_file_name, header=None)
 
@@ -183,9 +192,10 @@ def compare(devices_dic, corners, analysis):
                 error_percentage = np.abs(
                     (xyce_result-ngspice_result)/xyce_result)*100
                 comparison_table += f"{device},{width},{length},{corner},{np.max(error_percentage):.3f}%\n"
-
+                break
             break
         break
+
     with open(f"comparison_result_{analysis}.csv", "w")as f:
         f.write(comparison_table)
 
@@ -234,7 +244,7 @@ def simulate(devices_dic, corners, num_cores, analysis):
                                              supply=devices_dic[device]["supply"], file_name=file_name, analysis=analysis)
 
                     executor.submit(call_simulator, file_name)
-
+                    break
                 break
             break
 
